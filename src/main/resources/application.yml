@@ -1,0 +1,11 @@
+spring:
+  kafka:
+    bootstrap-servers:
+    template:
+      default-topic:
+    consumer:
+      group-id:
+  application:
+    name: api-template
+server:
+  port: 8443
