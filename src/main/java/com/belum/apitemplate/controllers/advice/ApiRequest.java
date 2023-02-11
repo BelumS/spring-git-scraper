@@ -4,33 +4,21 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.io.Serializable;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
-/**
- * Created by bel-sahn on 7/29/19
- */
 @JsonPropertyOrder({"code", "message", "timeStamp"})
 @Getter
 @ToString
-public final class ApiRequest implements Serializable {
-//region PROPERTIES
-    private String code;
-    private String message;
-    private long timeStamp;
-    private static final long serialVersionUID = 1L;
-//endregion
+public final class ApiRequest {
+    private final String code;
+    private final String message;
+    private final String timeStamp;
 
-//region CONSTRUCTORS
     public ApiRequest(String code, String message) {
         this.code = code;
         this.message = message;
-        this.timeStamp = System.currentTimeMillis();
+        this.timeStamp = ZonedDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG));
     }
-//endregion
-
-//region GETTERS/SETTERS
-//endregion
-
-//region HELPER METHODS
-//endregion
 }

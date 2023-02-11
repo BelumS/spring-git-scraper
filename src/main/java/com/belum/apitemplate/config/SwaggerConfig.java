@@ -1,70 +1,56 @@
 package com.belum.apitemplate.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ParameterBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.schema.ModelRef;
+import springfox.documentation.builders.*;
 import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Parameter;
+import springfox.documentation.service.ParameterType;
+import springfox.documentation.service.RequestParameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.Collections;
+import java.util.List;
 
-/**
- * Created by bel-sahn on 7/29/19
- */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-//region PROPERTIES
-//endregion
+    @Value("${spring.application.name}")
+    private String appName;
 
-//region CONSTRUCTORS
-//endregion
+    @Value("${spring.application.description}")
+    private String appDescription;
 
-//region BEANS
+    @Value("${api.version.one}")
+    private String apiV1Path;
+
     @Bean
-    public Docket apiV1(){
+    Docket apiV1() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("v1")
+                .globalRequestParameters(List.of(apiParam()))
                 .apiInfo(apiInfo())
-                .globalOperationParameters(Collections.singletonList(apiParam()))
                 .select()
-                .paths(PathSelectors.ant("/api/v1/**"))
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.ant(apiV1Path))
                 .build();
     }
 
-    @Bean
-    public Docket apiV2(){
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("v2")
-                .apiInfo(apiInfo())
-                .globalOperationParameters(Collections.singletonList(apiParam()))
-                .select()
-                .paths(PathSelectors.ant("/api/v2/**"))
-                .build();
-    }
-//endregion
-
-//region HELPER METHODS
-    private ApiInfo apiInfo(){
+    private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("")
-                .description("")
+                .title(appName)
+                .description(appDescription)
                 .build();
     }
 
-    private Parameter apiParam() {
-        return new ParameterBuilder()
-                .name("")
-                .modelRef(new ModelRef("string"))
-                .parameterType("header")
+    private RequestParameter apiParam() {
+        return new RequestParameterBuilder()
+                .name("Test")
+                .description("Test")
+                .in(ParameterType.HEADER)
+                .deprecated(false)
                 .required(false)
                 .build();
     }
-//endregion
 }

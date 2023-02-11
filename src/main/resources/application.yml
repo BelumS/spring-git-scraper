@@ -1,11 +1,9 @@
 spring:
-  kafka:
-    bootstrap-servers:
-    template:
-      default-topic:
-    consumer:
-      group-id:
   application:
-    name: api-template
+    name: spring-git-scraper
+    description: ""
 server:
-  port: 8443
+  port: 8080
+api:
+  version:
+    one: "/api/v1"
