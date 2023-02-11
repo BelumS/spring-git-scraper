@@ -1,6 +1,5 @@
-package com.belum.apitemplate.config;
+package com.bemsa.scraper.config;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
@@ -11,7 +10,7 @@ import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.retry.backoff.FixedBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Collections;
 
@@ -20,7 +19,7 @@ import java.util.Collections;
 @EnableRetry
 public class ApplicationConfig {
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) { return builder.build();}
+    public WebClient webClient(WebClient.Builder builder) { return builder.build();}
 
     @Bean
     public CacheManager cacheManager() {

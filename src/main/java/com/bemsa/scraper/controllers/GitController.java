@@ -1,4 +1,4 @@
-package com.belum.apitemplate.controllers;
+package com.bemsa.scraper.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;

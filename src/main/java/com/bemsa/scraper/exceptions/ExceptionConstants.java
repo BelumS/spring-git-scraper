@@ -1,4 +1,4 @@
-package com.belum.apitemplate.exceptions;
+package com.bemsa.scraper.exceptions;
 
 /**
  * Created by bel-sahn on 7/30/19

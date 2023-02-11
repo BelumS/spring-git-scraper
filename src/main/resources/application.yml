@@ -1,9 +1,16 @@
 spring:
   application:
     name: spring-git-scraper
-    description: ""
+    description: "An app that extracts user data from a Git GUI. "
+    environment: "${server.host}"
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 server:
   port: 8080
+  host: "localhost"
+  servlet:
+    context-path: "/scraper"
 api:
   version:
     one: "/api/v1"

@@ -1,4 +1,4 @@
-package com.belum.apitemplate.constants;
+package com.bemsa.scraper.constants;
 
 /**
  * Created by bel-sahn on 7/29/19

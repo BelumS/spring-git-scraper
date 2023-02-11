@@ -1,4 +1,4 @@
-package com.belum.apitemplate;
+package com.bemsa.scraper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

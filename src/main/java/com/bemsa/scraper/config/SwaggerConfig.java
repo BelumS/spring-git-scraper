@@ -1,4 +1,4 @@
-package com.belum.apitemplate.config;
+package com.bemsa.scraper.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

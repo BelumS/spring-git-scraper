@@ -1,9 +1,7 @@
-package com.belum.apitemplate.controllers.advice;
+package com.bemsa.scraper.controllers.advice;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
-
-import java.io.Serializable;
 
 @JsonPropertyOrder({"request", "response"})
 @Getter

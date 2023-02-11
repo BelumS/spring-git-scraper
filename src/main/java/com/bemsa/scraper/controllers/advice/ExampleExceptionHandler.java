@@ -1,4 +1,4 @@
-package com.belum.apitemplate.controllers.advice;
+package com.bemsa.scraper.controllers.advice;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="serviceName" source="spring.application.name"/>
+
+    <property resource="application.yml"/>
+
+    <property name="maxFileSize" value="${logback.maxFileSize:-25MB}"/>
+    <property name="maxHistory" value="${logback.maxHistory:-3}"/>
+    <property name="totalSizeCap" value="${logback.totalSizeCap:-300MB}"/>
+    <property name="logLevel" value="${logback.logLevel:-INFO}"/>
+    <property name="appender" value="${logback.appender:-STDOUT_COLOR}"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logFilePath}/spring-git-scraper.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${logFilePath}/spring-sql-gradle-producer-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>25MB</maxFileSize>
+            <maxHistory>3</maxHistory>
+            <totalSizeCap>300MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{ISO8601}|${serviceName:-SERVICE}|[%thread]|%-5level|%logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{ISO8601}|${serviceName:-SERVICE}|[%thread]|%-5level|%logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT_COLOR" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                %d{ISO8601}|${serviceName:-SERVICE}|%highlight(%p)|[%thread]|%logger{36} - %highlight(%m%n)
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC_APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE"/>
+        <queueSize>512</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <maxFlushTime>1000</maxFlushTime>
+        <neverBlock>true</neverBlock>
+    </appender>
+
+    <root level="${logLevel}">
+        <appender-ref ref="${appender}"/>
+    </root>
+</configuration>
