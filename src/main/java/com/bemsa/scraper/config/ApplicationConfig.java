@@ -1,5 +1,9 @@
 package com.bemsa.scraper.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
@@ -7,20 +11,47 @@ import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
-import org.springframework.retry.backoff.FixedBackOffPolicy;
-import org.springframework.retry.policy.SimpleRetryPolicy;
-import org.springframework.retry.support.RetryTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestTemplate;
 
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Collections;
 
 @Configuration
 @EnableCaching
 @EnableRetry
 public class ApplicationConfig {
-    @Bean
-    public WebClient webClient(WebClient.Builder builder) { return builder.build();}
+    @Value("${github.base.url}")
+    private String githubUrl;
 
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder
+                .rootUri(githubUrl)
+                .setConnectTimeout(Duration.ofMillis(3000))
+                .setReadTimeout(Duration.ofMillis(3000))
+                .build();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        mapper.registerModule(new JavaTimeModule());
+        return mapper;
+    }
+
+//    @Bean
+//    public WebClient webClient(WebClient.Builder builder) {
+//        //TODO: Look for possible headers and/or cookies?
+//        return builder
+//                .baseUrl(githubUrl)
+////                .defaultHeader("", "")
+////                .defaultCookie("", "")
+//                .build();
+//    }
+
+    //TODO: learn how to cache the github rest data
     @Bean
     public CacheManager cacheManager() {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
@@ -28,19 +59,5 @@ public class ApplicationConfig {
                 new ConcurrentMapCache("")
         ));
         return  cacheManager;
-    }
-
-    @Bean
-    public RetryTemplate retryTemplate() {
-        final RetryTemplate retryTemplate = new RetryTemplate();
-        FixedBackOffPolicy fixedBackOffPolicy = new FixedBackOffPolicy();
-        fixedBackOffPolicy.setBackOffPeriod(200);
-        retryTemplate.setBackOffPolicy(fixedBackOffPolicy);
-
-        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
-        retryPolicy.setMaxAttempts(3);
-        retryTemplate.setRetryPolicy(retryPolicy);
-
-        return  retryTemplate;
     }
 }

@@ -14,3 +14,9 @@ server:
 api:
   version:
     one: "/api/v1"
+retry:
+  maxAttempts: 3
+  maxDelay: 300
+github:
+  base:
+    url: "https://api.github.com/users"

@@ -2,6 +2,7 @@ package com.bemsa.scraper.controllers.advice;
 
 import com.bemsa.scraper.exceptions.DataNotFoundException;
 import com.bemsa.scraper.exceptions.GitScraperException;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +39,9 @@ public class RestExceptionHandler {
         return responseEntity;
     }
 
-    private ResponseEntity<ApiResponse> buildError(String message, HttpStatus status) {
+    private ResponseEntity<ApiResponse> buildError(@NonNull String message, HttpStatus status) {
         return new ResponseEntity<>(
-                new ApiResponse(new ApiRequest(null, message), null),
+                new ApiResponse(new ApiRequest(status.name(), message), null),
                 status
         );
     }
