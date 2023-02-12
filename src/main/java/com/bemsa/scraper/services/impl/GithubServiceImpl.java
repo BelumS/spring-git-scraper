@@ -10,7 +10,10 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -61,7 +64,7 @@ public class GithubServiceImpl implements GithubService {
     public List<GitRepo> getRepoData(String username) {
         try {
             String repoJson = getRepoJson(username);
-            return mapper.readValue(repoJson, new TypeReference<>(){});
+            return mapper.readValue(repoJson, new TypeReference<>() {});
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new DataNotFoundException(e.getMessage(), e);
