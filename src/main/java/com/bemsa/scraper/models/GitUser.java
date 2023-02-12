@@ -1,37 +1,42 @@
 package com.bemsa.scraper.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @ToString
-@Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class GitUser {
     @NonNull
-    private final String username;
+    private String login;
 
     @NonNull
-    private final String displayName;
+    private String name;
 
     @NonNull
-    private final String avatar;
+    @JsonProperty("avatar_url")
+    private String avatarUrl;
 
     @NonNull
-    private final String geoLocation;
+    private String location;
 
-    private final String email;
-
-    @NonNull
-    private final String url;
+    private String email;
 
     @NonNull
-    @DateTimeFormat(style = "M")
-    private final ZonedDateTime createdAt;
+    @JsonProperty("html_url")
+    private String url;
 
     @NonNull
-    private final List<GitRepo> repos;
+    @JsonProperty("created_at")
+    private ZonedDateTime createdAt;
+
+    @NonNull
+    @Setter
+    private List<GitRepo> repos;
 }

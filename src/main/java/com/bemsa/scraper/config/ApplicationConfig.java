@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableCaching
@@ -51,12 +51,12 @@ public class ApplicationConfig {
 //                .build();
 //    }
 
-    //TODO: learn how to cache the github rest data
     @Bean
     public CacheManager cacheManager() {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
-        cacheManager.setCaches(Collections.singletonList(
-                new ConcurrentMapCache("")
+        cacheManager.setCaches(List.of(
+                new ConcurrentMapCache("users"),
+                new ConcurrentMapCache("repos")
         ));
         return  cacheManager;
     }

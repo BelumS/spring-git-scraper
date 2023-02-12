@@ -18,8 +18,6 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,27 +36,19 @@ public class GithubServiceImpl implements GithubService {
     }
 
     @Override
+//    @Cacheable(value = "users")
     @Retryable(
             value = DataNotFoundException.class,
             maxAttemptsExpression = "${retry.maxAttempts}",
             backoff = @Backoff(delayExpression = "${retry.maxDelay}"))
     public GitUser getData(@NonNull String username) {
         try {
+            String userJson = getUserJson(username);
+            GitUser gitUser = mapper.readValue(userJson, GitUser.class);
+
             String repoJson = getRepoJson(username);
             List<GitRepo> repos = mapper.readValue(repoJson, new TypeReference<>(){});
-
-            String userJson = getUserJson(username);
-            JsonNode userNode = mapper.readTree(userJson);
-            GitUser gitUser = GitUser.builder()
-                    .username(parse(userNode, "login"))
-                    .displayName(parse(userNode, "name"))
-                    .avatar(parse(userNode, "avatar_url"))
-                    .email(parse(userNode, "email"))
-                    .geoLocation(parse(userNode, "location"))
-                    .repos(repos)
-                    .url(parse(userNode, "html_url"))
-                    .createdAt(ZonedDateTime.parse(parse(userNode, "created_at"), DateTimeFormatter.ISO_DATE_TIME))
-                    .build();
+            gitUser.setRepos(repos);
 
             //TODO: 5. cache the data
             //TODO: 6. return cached data
@@ -90,9 +80,5 @@ public class GithubServiceImpl implements GithubService {
         return Optional
                 .ofNullable(getRequestBody("/{username}/repos", username))
                 .orElseThrow(() -> new DataNotFoundException(String.format("No repos found for user: %s", username)));
-    }
-
-    private String parse(JsonNode node, String fieldName) {
-        return node.get(fieldName).asText();
     }
 }

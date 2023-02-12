@@ -1,6 +1,6 @@
 package com.bemsa.scraper.controllers;
 
-import com.bemsa.scraper.models.GitUser;
+import com.bemsa.scraper.models.GitUserUI;
 import com.bemsa.scraper.services.GithubService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ public class GitController {
     private final GithubService githubService;
 
     @GetMapping(value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public GitUser getUserByUsername(@PathVariable String username) {
-        return githubService.getData(username);
+    public GitUserUI getUserByUsername(@PathVariable String username) {
+        return new GitUserUI(githubService.getData(username));
     }
 }
