@@ -6,6 +6,8 @@ build/
 !**/src/main/**
 !**/src/test/**
 *.class
+logFilePath_IS_UNDEFINED
+tmp
 
 ### STS ###
 .apt_generated

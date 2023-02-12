@@ -30,8 +30,8 @@ public class ApplicationConfig {
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder
                 .rootUri(githubUrl)
-                .setConnectTimeout(Duration.ofMillis(3000))
-                .setReadTimeout(Duration.ofMillis(3000))
+                .setConnectTimeout(Duration.ofMillis(10000))
+                .setReadTimeout(Duration.ofMillis(10000))
                 .build();
     }
 

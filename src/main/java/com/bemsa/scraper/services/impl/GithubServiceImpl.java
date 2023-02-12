@@ -10,9 +10,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.*;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -34,6 +32,7 @@ public class GithubServiceImpl implements GithubService {
     private HttpEntity<String> httpEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", "application/vnd.github+json");
+        headers.set("Cache-Control", "public, max-age=60, s-maxage=60");
         return new HttpEntity<>(headers);
     }
 
@@ -43,42 +42,59 @@ public class GithubServiceImpl implements GithubService {
             value = DataNotFoundException.class,
             maxAttemptsExpression = "${retry.maxAttempts}",
             backoff = @Backoff(delayExpression = "${retry.maxDelay}"))
-    public GitUser getData(@NonNull String username) {
+    public GitUser getUserData(@NonNull String username) {
         try {
             String userJson = getUserJson(username);
-            GitUser gitUser = mapper.readValue(userJson, GitUser.class);
-
-            String repoJson = getRepoJson(username);
-            List<GitRepo> repos = mapper.readValue(repoJson, new TypeReference<>(){});
-            gitUser.setRepos(repos);
-
-            return gitUser;
+            return mapper.readValue(userJson, GitUser.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new DataNotFoundException(e.getMessage(), e);
         }
     }
 
-    private String getRequestBody(String url, String username) {
+    @Override
+    @Retryable(
+            value = DataNotFoundException.class,
+            maxAttemptsExpression = "${retry.maxAttempts}",
+            backoff = @Backoff(delayExpression = "${retry.maxDelay}"))
+    @Cacheable(value = "repos")
+    public List<GitRepo> getRepoData(String username) {
+        try {
+            String repoJson = getRepoJson(username);
+            return mapper.readValue(repoJson, new TypeReference<>(){});
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new DataNotFoundException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public GitUser combineData(String username) {
+        GitUser user = this.getUserData(username);
+        List<GitRepo> repos = this.getRepoData(username);
+        user.setRepos(repos);
+        return user;
+    }
+
+    private ResponseEntity<String> getRequest(String url, String username) {
         return restTemplate.exchange(
                 url,
                 HttpMethod.GET,
                 httpEntity(),
                 String.class,
                 username
-        )
-        .getBody();
+        );
     }
 
     private String getUserJson(String username) {
-        return Optional
-                .ofNullable(getRequestBody(USER_API, username))
-                .orElseThrow(() -> new DataNotFoundException(String.format("User %s not found", username)));
+        return Optional.of(getRequest(USER_API, username))
+                .orElseThrow(() -> new DataNotFoundException(String.format("User %s not found", username)))
+                .getBody();
     }
 
     private String getRepoJson(String username) {
-        return Optional
-                .ofNullable(getRequestBody(USER_API + "/repos", username))
-                .orElseThrow(() -> new DataNotFoundException(String.format("No repos found for user: %s", username)));
+        return Optional.of(getRequest(USER_API + "/repos", username))
+                .orElseThrow(() -> new DataNotFoundException(String.format("No repos found for user: %s", username)))
+                .getBody();
     }
 }

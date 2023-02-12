@@ -2,6 +2,7 @@ package com.bemsa.scraper.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 
 import java.time.ZonedDateTime;
@@ -10,9 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
+@ToString
 public final class GitUser {
     @NonNull
     private String login;

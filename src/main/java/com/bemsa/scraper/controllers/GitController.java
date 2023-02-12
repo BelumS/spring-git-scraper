@@ -20,6 +20,6 @@ public class GitController {
 
     @GetMapping(value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
     public GitUserUI getUserByUsername(@PathVariable String username) {
-        return new GitUserUI(githubService.getData(username));
+        return new GitUserUI(githubService.combineData(username));
     }
 }
