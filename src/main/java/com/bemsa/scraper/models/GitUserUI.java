@@ -40,7 +40,7 @@ public final class GitUserUI {
     @NonNull
     private final List<GitRepo> repos;
 
-    public GitUserUI(GitUser gitUser) {
+    public GitUserUI(@NonNull GitUser gitUser) {
         this.username = gitUser.getLogin();
         this.displayName = gitUser.getName();
         this.email = gitUser.getEmail();

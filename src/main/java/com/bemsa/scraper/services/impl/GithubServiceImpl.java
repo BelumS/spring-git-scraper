@@ -5,7 +5,6 @@ import com.bemsa.scraper.models.GitRepo;
 import com.bemsa.scraper.models.GitUser;
 import com.bemsa.scraper.services.GithubService;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
