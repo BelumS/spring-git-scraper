@@ -1,15 +1,13 @@
 package com.bemsa.scraper.constants;
 
-/**
- * Created by bel-sahn on 7/29/19
- */
-public final class ApiConstants {
-//region PROPERTIES
-    public static final String VALUE = "VALUE";
-//endregion
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-//region CONSTRUCTORS
-    private ApiConstants(){}
-//endregion
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ApiConstants {
+
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    public static final String USER_API = "/{username}";
 
 }

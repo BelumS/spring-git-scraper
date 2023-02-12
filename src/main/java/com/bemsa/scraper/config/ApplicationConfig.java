@@ -17,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.List;
 
+import static com.bemsa.scraper.constants.ApiConstants.DATE_FORMAT;
+
 @Configuration
 @EnableCaching
 @EnableRetry
@@ -36,20 +38,10 @@ public class ApplicationConfig {
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        mapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT));
         mapper.registerModule(new JavaTimeModule());
         return mapper;
     }
-
-//    @Bean
-//    public WebClient webClient(WebClient.Builder builder) {
-//        //TODO: Look for possible headers and/or cookies?
-//        return builder
-//                .baseUrl(githubUrl)
-////                .defaultHeader("", "")
-////                .defaultCookie("", "")
-//                .build();
-//    }
 
     @Bean
     public CacheManager cacheManager() {

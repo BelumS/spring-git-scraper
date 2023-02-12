@@ -6,8 +6,9 @@ import lombok.Getter;
 import lombok.NonNull;
 
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.List;
+
+import static com.bemsa.scraper.constants.ApiConstants.DATE_FORMAT;
 
 @Getter
 @JsonPropertyOrder({"user_name", "display_name", "avatar", "geo_location", "email", "url", "created_at", "repos"})
@@ -46,7 +47,7 @@ public final class GitUserUI {
         this.avatar = gitUser.getAvatarUrl();
         this.geoLocation = gitUser.getLocation();
         this.url = gitUser.getUrl();
-        this.createdAt = gitUser.getCreatedAt().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
+        this.createdAt = gitUser.getCreatedAt().format(DateTimeFormatter.ofPattern(DATE_FORMAT));
         this.repos = gitUser.getRepos();
     }
 }
