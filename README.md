@@ -106,6 +106,12 @@ public class ApplicationConfig {
 ```java
 @Service
 public class GithubServiceImpl implements GithubService {
+
+  private HttpEntity<String> httpEntity() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Cache-Control", "public, max-age=60, s-maxage=60");
+    return new HttpEntity<>(headers);
+  }
     
   @Override
   @Cacheable(value = "users")

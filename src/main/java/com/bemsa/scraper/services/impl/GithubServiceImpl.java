@@ -47,7 +47,7 @@ public class GithubServiceImpl implements GithubService {
             backoff = @Backoff(delayExpression = "${retry.maxDelay}"))
     public GitUser getUserData(@NonNull String username) {
         try {
-            String userJson = getUserJson(username);
+            String userJson = getRequestAsJson(username, USER_API, "User %s not found");
             GitUser user = mapper.readValue(userJson, GitUser.class);
             log.info("Found data for user: {}.", user.getLogin());
             return user;
@@ -65,7 +65,7 @@ public class GithubServiceImpl implements GithubService {
     @Cacheable(value = "repos")
     public List<GitRepo> getRepoData(String username) {
         try {
-            String repoJson = getRepoJson(username);
+            String repoJson = getRequestAsJson(username, USER_API + "/repos","No repos found for user: %s");
             List<GitRepo> list = mapper.readValue(repoJson, new TypeReference<>() {});
             log.info("Found {} repos for user: {}.", list.size(), username);
             return list;
@@ -93,15 +93,10 @@ public class GithubServiceImpl implements GithubService {
         );
     }
 
-    private String getUserJson(String username) {
-        return Optional.of(getRequest(USER_API, username))
-                .orElseThrow(() -> new DataNotFoundException(String.format("User %s not found", username)))
+    private String getRequestAsJson(String username, String url, String errorMessage) {
+        return Optional.of(getRequest(url, username))
+                .orElseThrow(() -> new DataNotFoundException(String.format(errorMessage, username)))
                 .getBody();
     }
 
-    private String getRepoJson(String username) {
-        return Optional.of(getRequest(USER_API + "/repos", username))
-                .orElseThrow(() -> new DataNotFoundException(String.format("No repos found for user: %s", username)))
-                .getBody();
-    }
 }

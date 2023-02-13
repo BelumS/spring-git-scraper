@@ -31,9 +31,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class GithubServiceTest {
 
-    @Captor
-    private ArgumentCaptor<Object> argumentCaptor;
-
     @Spy
     private ObjectMapper objectMapper;
 
@@ -66,7 +63,7 @@ class GithubServiceTest {
     }
 
     @Test
-    void testGetUserDataThrowsException() throws Exception {
+    void testGetUserDataThrowsException() {
         assertThatThrownBy(() -> {
             //given
             String json = "{}";
@@ -110,6 +107,7 @@ class GithubServiceTest {
         }).isInstanceOf(DataNotFoundException.class);
     }
 
+    //Skipped due to test complexity
     @Disabled
     @Test
     void testCombineData() throws Exception {
