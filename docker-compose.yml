@@ -1,0 +1,10 @@
+version: '3.5'
+services:
+  spring-git-scraper:
+    container_name: spring-git-scraper
+    build:
+      context: spring-git-scraper
+      dockerfile: Dockerfile
+    image: belum/spring-git-scraper:latest
+    ports:
+      - "8080:8080"
