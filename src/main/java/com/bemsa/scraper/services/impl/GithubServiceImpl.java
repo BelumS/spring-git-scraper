@@ -48,7 +48,9 @@ public class GithubServiceImpl implements GithubService {
     public GitUser getUserData(@NonNull String username) {
         try {
             String userJson = getUserJson(username);
-            return mapper.readValue(userJson, GitUser.class);
+            GitUser user = mapper.readValue(userJson, GitUser.class);
+            log.info("Found data for user: {}.", user.getLogin());
+            return user;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new DataNotFoundException(e.getMessage(), e);
@@ -64,7 +66,9 @@ public class GithubServiceImpl implements GithubService {
     public List<GitRepo> getRepoData(String username) {
         try {
             String repoJson = getRepoJson(username);
-            return mapper.readValue(repoJson, new TypeReference<>() {});
+            List<GitRepo> list = mapper.readValue(repoJson, new TypeReference<>() {});
+            log.info("Found {} repos for user: {}.", list.size(), username);
+            return list;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new DataNotFoundException(e.getMessage(), e);

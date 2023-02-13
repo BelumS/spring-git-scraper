@@ -114,11 +114,12 @@ class GithubServiceTest {
     @Test
     void testCombineData() throws Exception {
         //given
-        ResponseEntity<String> repoResponse = ResponseEntity.ok(objectMapper.writeValueAsString(GIT_REPO_LIST));
-        when(getResponseEntity()).thenReturn(repoResponse);
+        ResponseEntity<String> userResponse = ResponseEntity.ok(objectMapper.writeValueAsString(GIT_USER_NO_REPOS));
+        when(getResponseEntity()).thenReturn(userResponse);
         when(Mockito.spy(githubService.getRepoData(USER_NAME))).thenReturn(GIT_REPO_LIST);
 
-        when(Mockito.spy(githubService.getUserData(USER_NAME))).thenReturn(GIT_USER);
+        ResponseEntity<String> repoResponse = ResponseEntity.ok(objectMapper.writeValueAsString(GIT_REPO_LIST));
+        when(getResponseEntity()).thenReturn(repoResponse);
 
         //when
         GitUser user = githubService.combineData(USER_NAME);

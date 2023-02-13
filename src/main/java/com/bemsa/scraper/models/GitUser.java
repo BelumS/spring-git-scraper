@@ -13,7 +13,6 @@ import java.util.List;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
-@ToString
 public final class GitUser {
     @NonNull
     private String login;

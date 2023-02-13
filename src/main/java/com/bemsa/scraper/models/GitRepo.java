@@ -6,7 +6,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class GitRepo {
 
