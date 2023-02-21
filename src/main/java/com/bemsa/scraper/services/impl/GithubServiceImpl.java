@@ -1,9 +1,11 @@
 package com.bemsa.scraper.services.impl;
 
 import com.bemsa.scraper.exceptions.DataNotFoundException;
+import com.bemsa.scraper.exceptions.GitScraperException;
 import com.bemsa.scraper.models.GitRepo;
 import com.bemsa.scraper.models.GitUser;
 import com.bemsa.scraper.services.GithubService;
+import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -42,7 +45,7 @@ public class GithubServiceImpl implements GithubService {
     @Override
     @Cacheable(value = "users")
     @Retryable(
-            value = DataNotFoundException.class,
+            value = RestClientException.class,
             maxAttemptsExpression = "${retry.maxAttempts}",
             backoff = @Backoff(delayExpression = "${retry.maxDelay}"))
     public GitUser getUserData(@NonNull String username) {
@@ -51,15 +54,18 @@ public class GithubServiceImpl implements GithubService {
             GitUser user = mapper.readValue(userJson, GitUser.class);
             log.info("Found data for user: {}.", user.getLogin());
             return user;
+        } catch (DataNotFoundException | RestClientException | JacksonException e) {
+            log.error(e.getMessage(), e);
+            throw new GitScraperException(e.getMessage(), e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new DataNotFoundException(e.getMessage(), e);
+            throw e;
         }
     }
 
     @Override
     @Retryable(
-            value = DataNotFoundException.class,
+            value = RestClientException.class,
             maxAttemptsExpression = "${retry.maxAttempts}",
             backoff = @Backoff(delayExpression = "${retry.maxDelay}"))
     @Cacheable(value = "repos")
@@ -69,9 +75,12 @@ public class GithubServiceImpl implements GithubService {
             List<GitRepo> list = mapper.readValue(repoJson, new TypeReference<>() {});
             log.info("Found {} repos for user: {}.", list.size(), username);
             return list;
+        }  catch (DataNotFoundException | RestClientException | JacksonException e) {
+            log.error(e.getMessage(), e);
+            throw new GitScraperException(e.getMessage(), e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new DataNotFoundException(e.getMessage(), e);
+            throw e;
         }
     }
 

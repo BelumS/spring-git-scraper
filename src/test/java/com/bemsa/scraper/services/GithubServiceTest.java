@@ -1,16 +1,20 @@
 package com.bemsa.scraper.services;
 
-import com.bemsa.scraper.exceptions.DataNotFoundException;
+import com.bemsa.scraper.exceptions.GitScraperException;
 import com.bemsa.scraper.models.GitRepo;
 import com.bemsa.scraper.models.GitUser;
 import com.bemsa.scraper.services.impl.GithubServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -69,11 +73,11 @@ class GithubServiceTest {
             String json = "{}";
             ResponseEntity<String> userResponse = ResponseEntity.ok(json);
             when(getResponseEntity()).thenReturn(userResponse);
-            when(objectMapper.readValue(json, GitUser.class)).thenThrow(DataNotFoundException.class);
+            when(objectMapper.readValue(json, GitUser.class)).thenThrow(JsonProcessingException.class);
 
             //when
             githubService.getUserData("");
-        }).isInstanceOf(DataNotFoundException.class);
+        }).isInstanceOf(GitScraperException.class);
     }
 
     @Test
@@ -104,7 +108,7 @@ class GithubServiceTest {
 
             //then
             githubService.getRepoData("");
-        }).isInstanceOf(DataNotFoundException.class);
+        }).isInstanceOf(GitScraperException.class);
     }
 
     //Skipped due to test complexity

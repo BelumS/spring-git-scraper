@@ -30,6 +30,7 @@ public class RestExceptionHandler {
         log.error("handleGitScraperException: {}", responseEntity);
         return responseEntity;
     }
+
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<ApiResponse> handleCatchAllException(Exception e) {
         log.error(e.getMessage(), e);
