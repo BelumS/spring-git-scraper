@@ -1,5 +1,6 @@
 package com.bemsa.scraper.services.impl;
 
+import com.bemsa.scraper.clients.GithubClient;
 import com.bemsa.scraper.exceptions.DataNotFoundException;
 import com.bemsa.scraper.exceptions.GitScraperException;
 import com.bemsa.scraper.models.GitRepo;
@@ -12,18 +13,10 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.bemsa.scraper.constants.ApiConstants.USER_API;
 
@@ -33,24 +26,13 @@ import static com.bemsa.scraper.constants.ApiConstants.USER_API;
 public class GithubServiceImpl implements GithubService {
 
     private final ObjectMapper mapper;
-    private final RestTemplate restTemplate;
-
-    private HttpEntity<String> httpEntity() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept", "application/vnd.github+json");
-        headers.set("Cache-Control", "public, max-age=60, s-maxage=60");
-        return new HttpEntity<>(headers);
-    }
+    private final GithubClient githubClient;
 
     @Override
     @Cacheable(value = "users")
-    @Retryable(
-            value = RestClientException.class,
-            maxAttemptsExpression = "${retry.maxAttempts}",
-            backoff = @Backoff(delayExpression = "${retry.maxDelay}"))
     public GitUser getUserData(@NonNull String username) {
         try {
-            String userJson = getRequestAsJson(username, USER_API, "User %s not found");
+            String userJson = githubClient.getRequestAsJson(username, USER_API, "User %s not found");
             GitUser user = mapper.readValue(userJson, GitUser.class);
             log.info("Found data for user: {}.", user.getLogin());
             return user;
@@ -64,14 +46,10 @@ public class GithubServiceImpl implements GithubService {
     }
 
     @Override
-    @Retryable(
-            value = RestClientException.class,
-            maxAttemptsExpression = "${retry.maxAttempts}",
-            backoff = @Backoff(delayExpression = "${retry.maxDelay}"))
     @Cacheable(value = "repos")
     public List<GitRepo> getRepoData(String username) {
         try {
-            String repoJson = getRequestAsJson(username, USER_API + "/repos","No repos found for user: %s");
+            String repoJson = githubClient.getRequestAsJson(username, USER_API + "/repos","No repos found for user: %s");
             List<GitRepo> list = mapper.readValue(repoJson, new TypeReference<>() {});
             log.info("Found {} repos for user: {}.", list.size(), username);
             return list;
@@ -91,21 +69,4 @@ public class GithubServiceImpl implements GithubService {
         user.setRepos(repos);
         return user;
     }
-
-    private ResponseEntity<String> getRequest(String url, String username) {
-        return restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                httpEntity(),
-                String.class,
-                username
-        );
-    }
-
-    private String getRequestAsJson(String username, String url, String errorMessage) {
-        return Optional.of(getRequest(url, username))
-                .orElseThrow(() -> new DataNotFoundException(String.format(errorMessage, username)))
-                .getBody();
-    }
-
 }
