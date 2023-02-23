@@ -13,6 +13,8 @@ public final class TestConstants {
     private TestConstants(){}
 
     public static final String USER_NAME = "test";
+    public static final String API_URL = "http://api.com/users";
+    public static final String ERROR_MESSAGE = "An error occurred while retrieving data for user: ";
 
     public static final List<GitRepo> GIT_REPO_LIST = List.of(
             new GitRepo("test-repo", "https://github.com/test/test-repo"),

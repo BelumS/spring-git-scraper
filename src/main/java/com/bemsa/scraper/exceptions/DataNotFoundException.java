@@ -10,7 +10,4 @@ public class DataNotFoundException extends GitScraperException {
         super(message);
     }
 
-    public DataNotFoundException(String message, Throwable cause){
-        super(message, cause);
-    }
 }

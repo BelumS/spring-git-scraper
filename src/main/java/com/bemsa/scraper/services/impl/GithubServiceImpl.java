@@ -32,11 +32,11 @@ public class GithubServiceImpl implements GithubService {
     @Cacheable(value = "users")
     public GitUser getUserData(@NonNull String username) {
         try {
-            String userJson = githubClient.getRequestAsJson(username, USER_API, "User %s not found");
+            String userJson = githubClient.asJson(username, USER_API, "User %s not found");
             GitUser user = mapper.readValue(userJson, GitUser.class);
             log.info("Found data for user: {}.", user.getLogin());
             return user;
-        } catch (DataNotFoundException | RestClientException | JacksonException e) {
+        } catch (GitScraperException | RestClientException | JacksonException e) {
             log.error(e.getMessage(), e);
             throw new GitScraperException(e.getMessage(), e);
         } catch (Exception e) {
@@ -49,11 +49,11 @@ public class GithubServiceImpl implements GithubService {
     @Cacheable(value = "repos")
     public List<GitRepo> getRepoData(String username) {
         try {
-            String repoJson = githubClient.getRequestAsJson(username, USER_API + "/repos","No repos found for user: %s");
+            String repoJson = githubClient.asJson(username, USER_API + "/repos","No repos found for user: %s");
             List<GitRepo> list = mapper.readValue(repoJson, new TypeReference<>() {});
             log.info("Found {} repos for user: {}.", list.size(), username);
             return list;
-        }  catch (DataNotFoundException | RestClientException | JacksonException e) {
+        }  catch (GitScraperException | RestClientException | JacksonException e) {
             log.error(e.getMessage(), e);
             throw new GitScraperException(e.getMessage(), e);
         } catch (Exception e) {

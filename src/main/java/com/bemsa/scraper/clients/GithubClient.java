@@ -5,12 +5,12 @@ import org.springframework.http.ResponseEntity;
 public interface GithubClient {
 
     /**
-     * Sends a request for data to the Github API.
+     * Sends a GET request for data to the Github API.
      * @param url the request URI
      * @param username the github user's name
      * @return the response
      */
-    ResponseEntity<String> getRequest(String url, String username);
+    ResponseEntity<String> get(String url, String username);
 
     /**
      * Converts a request to JSON
@@ -19,5 +19,5 @@ public interface GithubClient {
      * @param errorMessage an error message
      * @return the JSON
      */
-    String getRequestAsJson(String username, String url, String errorMessage);
+    String asJson(String username, String url, String errorMessage);
 }

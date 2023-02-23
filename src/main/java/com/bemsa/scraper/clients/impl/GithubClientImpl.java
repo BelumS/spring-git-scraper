@@ -1,7 +1,7 @@
 package com.bemsa.scraper.clients.impl;
 
 import com.bemsa.scraper.clients.GithubClient;
-import com.bemsa.scraper.exceptions.DataNotFoundException;
+import com.bemsa.scraper.exceptions.GitScraperException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -28,20 +28,28 @@ public class GithubClientImpl implements GithubClient {
             value = RestClientException.class,
             maxAttemptsExpression = "${retry.maxAttempts}",
             backoff = @Backoff(delayExpression = "${retry.maxDelay}"))
-    public ResponseEntity<String> getRequest(String url, String username) {
-        return restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                httpEntity(),
-                String.class,
-                username
-        );
+    public ResponseEntity<String> get(String url, String username) {
+        try {
+            return restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    httpEntity(),
+                    String.class,
+                    username
+            );
+        } catch (RestClientException e) {
+            log.error(e.getMessage(), e);
+            throw new GitScraperException(e.getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Override
-    public String getRequestAsJson(String username, String url, String errorMessage) {
-        return Optional.of(getRequest(url, username))
-                .orElseThrow(() -> new DataNotFoundException(String.format(errorMessage, username)))
+    public String asJson(String username, String url, String errorMessage) {
+        return Optional.of(get(url, username))
+                .orElseThrow(() -> new GitScraperException(String.format(errorMessage, username)))
                 .getBody();
     }
 
