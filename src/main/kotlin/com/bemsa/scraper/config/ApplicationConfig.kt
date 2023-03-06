@@ -3,7 +3,6 @@ package com.bemsa.scraper.config;
 import com.bemsa.scraper.constants.DATE_FORMAT
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.cache.CacheManager
@@ -14,7 +13,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.retry.annotation.EnableRetry
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.reactive.function.client.WebClient
+//import org.springframework.web.reactive.function.client.WebClient
 
 import java.text.SimpleDateFormat
 import java.time.Duration

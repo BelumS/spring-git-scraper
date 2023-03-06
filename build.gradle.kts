@@ -19,7 +19,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("java")
-    id("idea")
+//    id("idea")
     id("org.springframework.boot") version "2.7.7"
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
     id("com.github.spotbugs") version "5.0.13"
@@ -85,7 +85,7 @@ dependencies {
     }
     testImplementation("org.assertj:assertj-core:3.24.2")
     testImplementation("io.projectreactor:reactor-test")
-    testImplementation("com.ninja-squad:springmockk:4.0.1")
+    testImplementation("com.ninja-squad:springmockk:3.0.1")
     testImplementation("org.springframework.restdocs:spring-restdocs-webtestclient")
     testRuntimeOnly("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4")
 }
@@ -93,7 +93,7 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
 }
 

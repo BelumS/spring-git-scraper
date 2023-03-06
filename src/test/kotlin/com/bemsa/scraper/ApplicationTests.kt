@@ -6,15 +6,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(SpringExtension::class)
 @SpringBootTest
 class ApplicationTests {
 
-    private final Application application = new Application();
+    private val application = Application();
 
     @Test
-    void contextLoads() {
-        Application.main(new String[]{"0"});
-        Assertions.assertThat(application).isNotNull();
+    fun contextLoads() {
+        Assertions.assertThat(application).isNotNull;
     }
 }

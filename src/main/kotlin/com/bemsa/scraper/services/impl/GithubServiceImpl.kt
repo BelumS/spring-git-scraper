@@ -22,16 +22,16 @@ class GithubServiceImpl(
 
     @Cacheable("users")
     override fun getUserData(@NonNull username: String): GitUser {
-        val userJson: String = githubClient.asJson(username, USER_API, "User %s not found");
-        val user: GitUser = mapper.readValue(userJson)
+        val userJson: String? = githubClient.asJson(username, USER_API,"User %s not found");
+        val user: GitUser = mapper.readValue(userJson!!)
         log.info("Found data for user: ${user.login}.");
         return user
     }
 
     @Cacheable("repos")
     override fun getRepoData(username: String): MutableList<GitRepo> {
-       val repoJson = githubClient.asJson(username, "$USER_API/repos","No repos found for user: %s")
-        val list: MutableList<GitRepo> = mapper.readValue(repoJson)
+       val repoJson: String? = githubClient.asJson(username, "$USER_API/repos","No repos found for user: %s")
+        val list: MutableList<GitRepo> = mapper.readValue(repoJson!!)
         log.info("Found ${list.size} repos for user: $username.");
         return list
     }
