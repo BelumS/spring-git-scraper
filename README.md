@@ -35,10 +35,11 @@ Users should be able to:
 ## My process
 ### Built With
 * Spring Boot v2.7.7
-  * Spring Web
+  * Spring Web Client
   * Spring Cache
   * Spring Retry v1.3.2
   * Spring AOP (required dependency for Retry)
+* Kotlin v1.8.0
 * Java 11
 * Project Lombok 
 * Testing

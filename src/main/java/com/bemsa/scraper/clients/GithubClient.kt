@@ -2,7 +2,7 @@ package com.bemsa.scraper.clients;
 
 import org.springframework.http.ResponseEntity;
 
-public interface GithubClient {
+interface GithubClient {
 
     /**
      * Sends a GET request for data to the Github API.
@@ -10,7 +10,7 @@ public interface GithubClient {
      * @param username the github user's name
      * @return the response
      */
-    ResponseEntity<String> get(String url, String username);
+    fun get(url: String, username: String): ResponseEntity<String>
 
     /**
      * Converts a request to JSON
@@ -19,5 +19,5 @@ public interface GithubClient {
      * @param errorMessage an error message
      * @return the JSON
      */
-    String asJson(String username, String url, String errorMessage);
+    fun asJson(username: String, url: String, errorMessage: String): String?
 }

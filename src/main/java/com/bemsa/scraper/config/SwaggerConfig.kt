@@ -15,21 +15,21 @@ import java.util.List;
 
 @Configuration
 @EnableSwagger2
-public class SwaggerConfig {
-    @Value("${spring.application.name}")
-    private String appName;
+class SwaggerConfig {
+    @Value("\${spring.application.name}")
+    private lateinit var appName: String
 
-    @Value("${spring.application.description}")
-    private String appDescription;
+    @Value("\${spring.application.description}")
+    private lateinit var appDescription: String
 
-    @Value("${api.version.one}")
-    private String apiV1Path;
+    @Value("\${api.version.one}")
+    private lateinit var apiV1Path: String
 
     @Bean
-    Docket apiV1() {
-        return new Docket(DocumentationType.SWAGGER_2)
+    fun apiV1(): Docket {
+        return Docket(DocumentationType.SWAGGER_2)
                 .groupName("v1")
-                .globalRequestParameters(List.of(apiParam()))
+                .globalRequestParameters(listOf(apiParam()))
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.any())
@@ -37,18 +37,18 @@ public class SwaggerConfig {
                 .build();
     }
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
+    private fun apiInfo(): ApiInfo {
+        return ApiInfoBuilder()
                 .title(appName)
                 .description(appDescription)
                 .build();
     }
 
-    private RequestParameter apiParam() {
-        return new RequestParameterBuilder()
+    private fun apiParam(): RequestParameter {
+        return RequestParameterBuilder()
                 .name("Test")
                 .description("Test")
-                .in(ParameterType.HEADER)
+                .`in`(ParameterType.HEADER)
                 .deprecated(false)
                 .required(false)
                 .build();

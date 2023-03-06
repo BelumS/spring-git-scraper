@@ -1,7 +1,7 @@
 spring:
   application:
     name: spring-git-scraper
-    description: "An app that extracts user data from a Git GUI. "
+    description: "An app that extracts user data from a GitHub."
     environment: "${server.host}"
   mvc:
     pathmatch:
