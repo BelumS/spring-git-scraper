@@ -1,16 +1,16 @@
-package com.bemsa.scraper.constants;
+package com.bemsa.scraper.constants
 
-import com.bemsa.scraper.models.GitRepo;
-import com.bemsa.scraper.models.GitUser;
-import com.bemsa.scraper.models.GitUserUI;
+import com.bemsa.scraper.models.GitRepo
+import com.bemsa.scraper.models.GitUser
+import com.bemsa.scraper.models.GitUserUI
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
-const val USER_NAME = "test";
-const val TEST_NAME = "The Tester";
-const val API_URL = "http://www.api.com/users";
-const val ERROR_MESSAGE = "An error occurred while retrieving data for user: ";
+const val USER_NAME = "test"
+const val TEST_NAME = "The Tester"
+const val API_URL = "http://www.api.com/users"
+const val ERROR_MESSAGE = "An error occurred while retrieving data for user: "
 
 val GIT_REPO_LIST = mutableListOf(
     GitRepo("test-repo", "https://github.com/test/test-repo"),
@@ -39,4 +39,4 @@ val GIT_USER_NO_REPOS = GitUser(
     repos = mutableListOf()
 )
 
-val GIT_USER_UI = GitUserUI(GIT_USER);
+val GIT_USER_UI = GitUserUI(GIT_USER)

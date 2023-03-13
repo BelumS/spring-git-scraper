@@ -35,16 +35,18 @@ Users should be able to:
 ## My process
 ### Built With
 * Spring Boot v2.7.7
-  * Spring Web Client
+  * Spring Web
+  * Spring Webflux
   * Spring Cache
   * Spring Retry v1.3.2
   * Spring AOP (required dependency for Retry)
 * Kotlin v1.8.0
-* Java 11
 * Project Lombok 
 * Testing
   * JUnit 5
   * AssertJ v3.24.1
+  * Mockk
+  * SpringMockk
 * Springfox API Documentation v3.0.0
 * GitHub REST API
 
@@ -66,69 +68,64 @@ Users should be able to:
 
 I learned how to get Jackson JSON to serialize JDK 8 Date/Time types.
 
-```groovy
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4'
-    testRuntimeOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4'
+```kotlin
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4")
+    testRuntimeOnly("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4")
 ```
 
-```java
+```kotlin
 @Configuration
-public class ApplicationConfig {
+class ApplicationConfig {
   @Bean
-  public ObjectMapper objectMapper() {
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.registerModule(new JavaTimeModule());
-    return mapper;
+  fun objectMapper(): ObjectMapper {
+    val mapper = ObjectMapper()
+    mapper.registerModule(JavaTimeModule())
+    return mapper
   }
 }
 ```
 
 I learned how to cache the data using Spring Cache.
-```groovy
-implementation 'org.springframework.boot:spring-boot-starter-cache'
+```kotlin
+implementation("org.springframework.boot:spring-boot-starter-cache")
 ```
 
-```java
+```kotlin
 @Configuration
 @EnableCaching
-public class ApplicationConfig {
+class ApplicationConfig {
   @Bean
-  public CacheManager cacheManager() {
-    SimpleCacheManager cacheManager = new SimpleCacheManager();
-    cacheManager.setCaches(List.of(
-            new ConcurrentMapCache("users"),
-            new ConcurrentMapCache("repos")
-    ));
-    return cacheManager;
+  fun cacheManager(): CacheManager {
+    val cacheManager = SimpleCacheManager()
+    cacheManager.setCaches(listOf(
+      ConcurrentMapCache("users"),
+      ConcurrentMapCache("repos")
+    ))
+    return cacheManager
   }
 }
 ```
 
-```java
-@Component
-public class GithubClientImpl implements GithubClient {
-
-  private HttpEntity<String> httpEntity() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Cache-Control", "public, max-age=60, s-maxage=60");
-    return new HttpEntity<>(headers);
-  }
+```kotlin
+fun cachedGitHeaders(): HttpEntity<String> {
+  val headers = HttpHeaders()
+  headers.set("Accept", "application/vnd.github+json")
+  headers.set("Cache-Control", "public, max-age=$CACHE_TIME_SECONDS, s-maxage=$CACHE_TIME_SECONDS")
+  return HttpEntity(headers)
 }
 ```
 
-```java
+```kotlin
 @Service
-public class GithubServiceImpl implements GithubService {
-    
-  @Override
+class GithubServiceImpl: GithubService {
+  
   @Cacheable(value = "users")
-  public GitUser getUserData(String username) {
+  override fun getUserData(username: String): GitUser {
       //blank for brevity
   }
-
-  @Override
+  
   @Cacheable(value = "repos")
-  public List<GitRepo> getRepoData(String username) {
+  override fun getRepoData(username: String): List<GitRepo> {
     //blank for brevity
   }
 }

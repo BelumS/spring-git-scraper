@@ -1,6 +1,6 @@
-package com.bemsa.scraper.clients;
+package com.bemsa.scraper.clients
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity
 
 interface GithubClient {
 

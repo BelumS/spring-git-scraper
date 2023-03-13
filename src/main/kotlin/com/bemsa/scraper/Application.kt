@@ -1,4 +1,4 @@
-package com.bemsa.scraper;
+package com.bemsa.scraper
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

@@ -1,8 +1,8 @@
-package com.bemsa.scraper.services;
+package com.bemsa.scraper.services
 
 
-import com.bemsa.scraper.models.GitRepo;
-import com.bemsa.scraper.models.GitUser;
+import com.bemsa.scraper.models.GitRepo
+import com.bemsa.scraper.models.GitUser
 
 interface GithubService {
 

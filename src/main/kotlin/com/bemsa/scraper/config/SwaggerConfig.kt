@@ -1,15 +1,15 @@
-package com.bemsa.scraper.config;
+package com.bemsa.scraper.config
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.*;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ParameterType;
-import springfox.documentation.service.RequestParameter;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import springfox.documentation.builders.*
+import springfox.documentation.service.ApiInfo
+import springfox.documentation.service.ParameterType
+import springfox.documentation.service.RequestParameter
+import springfox.documentation.spi.DocumentationType
+import springfox.documentation.spring.web.plugins.Docket
+import springfox.documentation.swagger2.annotations.EnableSwagger2
 
 @Configuration
 @EnableSwagger2
@@ -32,14 +32,14 @@ class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.ant(apiV1Path))
-                .build();
+                .build()
     }
 
     private fun apiInfo(): ApiInfo {
         return ApiInfoBuilder()
                 .title(appName)
                 .description(appDescription)
-                .build();
+                .build()
     }
 
     private fun apiParam(): RequestParameter {
@@ -49,6 +49,6 @@ class SwaggerConfig {
                 .`in`(ParameterType.HEADER)
                 .deprecated(false)
                 .required(false)
-                .build();
+                .build()
     }
 }

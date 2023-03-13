@@ -1,10 +1,9 @@
-package com.bemsa.scraper.models;
+package com.bemsa.scraper.models
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.lang.NonNull
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class GitRepo(
-    @NonNull val name: String,
-    @NonNull val url: String
-) {}
+    val name: String,
+    val url: String
+)

@@ -1,4 +1,4 @@
-package com.bemsa.scraper.clients;
+package com.bemsa.scraper.clients
 
 import com.bemsa.scraper.clients.impl.GithubClientImpl
 import com.bemsa.scraper.constants.API_URL
@@ -21,11 +21,11 @@ import org.springframework.http.*
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.web.client.RestTemplate
 
-//import static com.bemsa.scraper.constants.TestConstants.*;
-//import static org.assertj.core.api.Assertions.assertThat;
-//import static org.assertj.core.api.Assertions.assertThatThrownBy;
-//import static org.mockito.ArgumentMatchers.*;
-//import static org.mockito.Mockito.when;
+//import static com.bemsa.scraper.constants.TestConstants.*
+//import static org.assertj.core.api.Assertions.assertThat
+//import static org.assertj.core.api.Assertions.assertThatThrownBy
+//import static org.mockito.ArgumentMatchers.*
+//import static org.mockito.Mockito.when
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -49,20 +49,20 @@ class GithubClientTest {
     fun testGet() {
         //given
         val json = "{}"
-        val userResponse = ResponseEntity.ok(json);
+        val userResponse = ResponseEntity.ok(json)
         every { getResponseEntity() } returns userResponse
 //        val json = "{}"
-//        ResponseEntity<String> userResponse = ResponseEntity.ok(json);
-//        when(getResponseEntity(USER_NAME)).thenReturn(userResponse);
+//        ResponseEntity<String> userResponse = ResponseEntity.ok(json)
+//        when(getResponseEntity(USER_NAME)).thenReturn(userResponse)
 
         //when
-        val request = githubClient.get(API_URL, USER_NAME);
+        val request = githubClient.get(API_URL, USER_NAME)
 
         //then
           verify(exactly = 1) { getResponseEntity()  }
           assertThat(request)
                 .isNotNull
-                .isEqualTo(userResponse);
+                .isEqualTo(userResponse)
     }
 
     @DisplayName("GET request returns 4xx")
@@ -70,15 +70,15 @@ class GithubClientTest {
     fun testGetThrowsRestClientException() {
 //        assertThatThrownBy(() -> {
 //            //given
-//            when(getResponseEntity()).thenThrow(RestClientException.class);
+//            when(getResponseEntity()).thenThrow(RestClientException.class)
 //
 //            //when
-//            var response = githubClient.get(API_URL, USER_NAME);
+//            var response = githubClient.get(API_URL, USER_NAME)
 //
 //            //then
 //            assertThat(response.getStatusCode())
-//                    .isEqualTo(HttpStatus.BAD_REQUEST);
-//        }).isInstanceOf(GitScraperException.class);
+//                    .isEqualTo(HttpStatus.BAD_REQUEST)
+//        }).isInstanceOf(GitScraperException.class)
     }
 
     @DisplayName("GET request returns 5xx")
@@ -86,43 +86,43 @@ class GithubClientTest {
     fun testGetThrowsException() {
 //        assertThatThrownBy(() -> {
 //            //given
-//            when(getResponseEntity()).thenThrow(NullPointerException.class);
+//            when(getResponseEntity()).thenThrow(NullPointerException.class)
 //
 //            //when
-//            var response = githubClient.get(API_URL, USER_NAME);
+//            var response = githubClient.get(API_URL, USER_NAME)
 //
 //            //then
-//            assertThat(response).isNull();
-//        }).isInstanceOf(NullPointerException.class);
+//            assertThat(response).isNull()
+//        }).isInstanceOf(NullPointerException.class)
     }
 
     @Test
     fun testAsJson() {
 //        //given
-//        String json = "{}";
-//        ResponseEntity<String> userResponse = ResponseEntity.ok(json);
-//        when(getResponseEntity()).thenReturn(userResponse);
+//        String json = "{}"
+//        ResponseEntity<String> userResponse = ResponseEntity.ok(json)
+//        when(getResponseEntity()).thenReturn(userResponse)
 //
 //        //when
-//        String requestJson = githubClient.asJson(USER_NAME, API_URL, ERROR_MESSAGE);
+//        String requestJson = githubClient.asJson(USER_NAME, API_URL, ERROR_MESSAGE)
 //
 //        //then
 //        assertThat(requestJson)
-//                .isEqualTo(json);
+//                .isEqualTo(json)
     }
 
     @Test
     fun testGetRequestAsJsonThrowsException() {
 //        assertThatThrownBy(() -> {
 //            //given
-//            when(getResponseEntity()).thenThrow(RestClientException.class);
+//            when(getResponseEntity()).thenThrow(RestClientException.class)
 //
 //            //when
-//            String requestJson = githubClient.asJson(USER_NAME, API_URL, ERROR_MESSAGE);
+//            String requestJson = githubClient.asJson(USER_NAME, API_URL, ERROR_MESSAGE)
 //
 //            //then
-//            assertThat(requestJson).isNull();
-//        }).isInstanceOf(GitScraperException.class);
+//            assertThat(requestJson).isNull()
+//        }).isInstanceOf(GitScraperException.class)
     }
 
     private fun getResponseEntity(): ResponseEntity<String> = restTemplate.exchange(API_URL, HttpMethod.GET, getHttpEntity(), String::class.java, USER_NAME)
@@ -139,5 +139,5 @@ class GithubClientTest {
 //HttpMethod.GET),
 //any(HttpEntity::class),
 //eq(String.class),
-//anyString());
+//anyString())
 }

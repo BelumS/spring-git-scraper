@@ -1,6 +1,7 @@
-package com.bemsa.scraper.config;
+package com.bemsa.scraper.config
 
 import com.bemsa.scraper.constants.DATE_FORMAT
+import com.bemsa.scraper.constants.REQUEST_DURATION_SECONDS
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.springframework.beans.factory.annotation.Value
@@ -32,17 +33,17 @@ class ApplicationConfig {
     fun restTemplate(builder: RestTemplateBuilder): RestTemplate {
         return builder
                 .rootUri(githubUrl)
-                .setConnectTimeout(Duration.ofMillis(10000))
-                .setReadTimeout(Duration.ofMillis(10000))
-                .build();
+                .setConnectTimeout(Duration.ofMillis(REQUEST_DURATION_SECONDS))
+                .setReadTimeout(Duration.ofMillis(REQUEST_DURATION_SECONDS))
+                .build()
     }
 
     @Bean
     fun objectMapper(): ObjectMapper {
         val mapper = ObjectMapper()
-        mapper.dateFormat = SimpleDateFormat(DATE_FORMAT);
-        mapper.registerModule(JavaTimeModule());
-        return mapper;
+        mapper.dateFormat = SimpleDateFormat(DATE_FORMAT)
+        mapper.registerModule(JavaTimeModule())
+        return mapper
     }
 
     @Bean
@@ -51,7 +52,7 @@ class ApplicationConfig {
         cacheManager.setCaches(listOf(
             ConcurrentMapCache("users"),
             ConcurrentMapCache("repos"))
-        );
+        )
         return cacheManager
     }
 }

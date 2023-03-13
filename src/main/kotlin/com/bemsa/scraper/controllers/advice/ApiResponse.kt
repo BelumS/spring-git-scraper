@@ -1,6 +1,6 @@
-package com.bemsa.scraper.controllers.advice;
+package com.bemsa.scraper.controllers.advice
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder
 
 @JsonPropertyOrder("request", "response")
 data class ApiResponse(
