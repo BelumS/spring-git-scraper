@@ -1,25 +1,18 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-//TODO: fix buildscript
-//buildscript {
-//    ext {
-//        rootPack = 'com.bemsa.scraper'
-//        springBootVersion = '2.7.7'
-//        swaggerVersion = '3.0.0'
-//    }
-//
-//    repositories {
-//        mavenCentral()
-//    }
-//
-//    dependencies {
-//        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
-//    }
-//}
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.7.7")
+    }
+}
 
 plugins {
-    id("java")
-//    id("idea")
+    java
+    idea
     id("org.springframework.boot") version "2.7.7"
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
     id("com.github.spotbugs") version "5.0.13"
@@ -30,28 +23,21 @@ plugins {
     kotlin("kapt") version "1.8.0"
 }
 
-//TODO: fix this
-//idea {
-//    module {
-//        downloadJavadoc = true
-//        downloadSources = true
-//    }
-//}
+idea {
+    module {
+        isDownloadSources = true
+        isDownloadJavadoc = true
+    }
+}
 
 group = "com.bemsa"
 version = "1.0.0"
-java.sourceCompatibility = JavaVersion.VERSION_11
 
-//TODO: fix this
-//configurations {
-//    developmentOnly
-//    runtimeClasspath {
-//        extendsFrom developmentOnly
-//    }
-//    compileOnly {
-//        extendsFrom annotationProcessor
-//    }
-//}
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
 
 repositories {
     mavenCentral()
@@ -97,8 +83,17 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-    //TODO: fix this
+    failFast = true
+    reports {
+        junitXml.required.set(false)
+        html.required.set(true)
+    }
     testLogging {
-//        events = listOf("passed", "skipped", "failed")
+        showCauses = true
+        showExceptions = true
+        showStackTraces = true
+        showStandardStreams = true
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        events("passed", "skipped", "failed")
     }
 }
